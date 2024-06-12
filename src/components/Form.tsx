@@ -132,6 +132,7 @@ export const Form = ({
         <label className="flex gap-2">
           OpenAI API Key:
           <input
+            autoComplete="off"
             type="password"
             className="grow rounded-md border p-1 text-xs"
             value={apiKey}
