@@ -5,7 +5,7 @@ export const Header = () => {
       <p>
         OpenAI APIを使用して、自動で画像の説明を生成します。{" "}
         <a
-          href="#"
+          href="https://github.com/avaice/a-ult"
           target="_blank"
           className="text-blue-500 underline hover:text-blue-800"
         >
