@@ -16,7 +16,10 @@ export const Form = ({
 
   const readImage = useCallback((file: File) => {
     const ext = file.name.split(".").pop()
-    if (!ext || (ext !== "png" && ext !== "jpg" && ext !== "jpeg")) {
+    if (
+      !ext ||
+      (ext !== "png" && ext !== "jpg" && ext !== "jpeg" && ext !== "webp")
+    ) {
       return toast.error("画像ファイルを選択してください")
     }
 
@@ -93,7 +96,7 @@ export const Form = ({
               <input
                 className="hidden"
                 type="file"
-                accept=".jpeg,.jpg,.png"
+                accept=".jpeg,.jpg,.png,.webp"
                 ref={imgInputRef}
                 onChange={(e) => {
                   if (!e.currentTarget.files) return
