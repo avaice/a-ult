@@ -37,6 +37,7 @@ export function App() {
         }
       } catch (e) {
         toast.error("OpenAI APIのエラー: " + (e as { message: string }).message)
+        setIsLoading(false)
       }
     },
     []
