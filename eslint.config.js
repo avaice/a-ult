@@ -1,5 +1,6 @@
 import pluginJs from "@eslint/js";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
+import tailwind from "eslint-plugin-tailwindcss";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -17,5 +18,6 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.strict,
   ...tseslint.configs.stylistic,
+  ...tailwind.configs["flat/recommended"]
 
 ];
