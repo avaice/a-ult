@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks"
+import { useCallback, useRef, useState } from "preact/hooks"
 import { toast } from "react-toastify"
 
 export const Form = ({
@@ -12,6 +12,32 @@ export const Form = ({
   const [image, setImage] = useState<string | null>(null)
   const [additional, setAdditional] = useState("")
   const [apiKey, setApiKey] = useState(localStorage.getItem("openai-key") || "")
+  const imgInputRef = useRef<HTMLInputElement>(null)
+
+  const readImage = useCallback((file: File) => {
+    const ext = file.name.split(".").pop()
+    if (!ext || (ext !== "png" && ext !== "jpg" && ext !== "jpeg")) {
+      return toast.error("画像ファイルを選択してください")
+    }
+
+    try {
+      // 選択画像を縦横比を保ちつつ横幅256pxにリサイズし、URLに変換
+      const canvas = document.createElement("canvas")
+      const ctx = canvas.getContext("2d")
+      if (!ctx) return
+      const image = new Image()
+      image.src = URL.createObjectURL(file)
+      image.onload = () => {
+        canvas.width = 640
+        canvas.height = (640 * image.height) / image.width
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+        setImage(canvas.toDataURL("image/jpeg"))
+      }
+    } catch (e) {
+      toast.error("画像の読み込みに失敗しました")
+      console.error(e)
+    }
+  }, [])
 
   return (
     <>
@@ -37,29 +63,7 @@ export const Form = ({
             setDragging(false)
 
             if (!e.dataTransfer || e.dataTransfer.files.length === 0) return
-
-            const ext = e.dataTransfer.files[0].name.split(".").pop()
-            if (!ext || (ext !== "png" && ext !== "jpg" && ext !== "jpeg")) {
-              return toast.error("画像ファイルを選択してください")
-            }
-
-            try {
-              // 選択画像を縦横比を保ちつつ横幅256pxにリサイズし、URLに変換
-              const canvas = document.createElement("canvas")
-              const ctx = canvas.getContext("2d")
-              if (!ctx) return
-              const image = new Image()
-              image.src = URL.createObjectURL(e.dataTransfer.files[0])
-              image.onload = () => {
-                canvas.width = 640
-                canvas.height = (640 * image.height) / image.width
-                ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
-                setImage(canvas.toDataURL("image/jpeg"))
-              }
-            } catch (e) {
-              toast.error("画像の読み込みに失敗しました")
-              console.error(e)
-            }
+            readImage(e.dataTransfer.files[0])
           }}
           className={`relative aspect-[4/3] w-full max-w-[400px] select-none ${
             dragging ? "bg-gray-100" : ""
@@ -86,7 +90,23 @@ export const Form = ({
           ) : (
             <div className="flex size-full flex-col items-center justify-center rounded-md border">
               <span>ここに画像をドロップ</span>
-              <button className="text-blue-500 underline hover:text-blue-800">
+              <input
+                className="hidden"
+                type="file"
+                accept=".jpeg,.jpg,.png"
+                ref={imgInputRef}
+                onChange={(e) => {
+                  if (!e.currentTarget.files) return
+                  setImage(null)
+                  readImage(e.currentTarget.files[0])
+                }}
+              />
+              <button
+                className="text-blue-500 underline hover:text-blue-800"
+                onClick={() => {
+                  imgInputRef.current?.click()
+                }}
+              >
                 または選択
               </button>
             </div>
