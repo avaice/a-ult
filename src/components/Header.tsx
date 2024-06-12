@@ -7,7 +7,7 @@ export const Header = () => {
         <a
           href="https://github.com/avaice/a-ult"
           target="_blank"
-          className="text-blue-500 underline hover:text-blue-800"
+          className="text-blue-600 underline hover:text-blue-800"
         >
           View on GitHub
         </a>
