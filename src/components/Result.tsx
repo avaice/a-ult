@@ -1,3 +1,5 @@
+import { toast } from "react-toastify"
+
 import { ResultType } from "../types"
 import { Spinner } from "./Spinner"
 
@@ -25,9 +27,24 @@ export const Result = ({
               </div>
             )}
             {result?.description ? (
-              <p className="rounded-md bg-gray-100 p-4 px-2">
-                {result?.description}
-              </p>
+              <div className="rounded-md bg-gray-100 p-4 px-2">
+                <p>
+                  {result?.description}
+                  <button
+                    className="text-blue-500 underline hover:text-blue-800"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(result?.description)
+                        toast.success("クリップボードにコピーしました")
+                      } catch {
+                        toast.error("クリップボードへのコピーに失敗しました")
+                      }
+                    }}
+                  >
+                    コピー
+                  </button>
+                </p>
+              </div>
             ) : (
               <p>画像を選択して、生成ボタンを押してください。</p>
             )}
