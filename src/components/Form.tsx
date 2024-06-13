@@ -15,16 +15,13 @@ export const Form = ({
   const imgInputRef = useRef<HTMLInputElement>(null)
 
   const readImage = useCallback((file: File) => {
-    const ext = file.name.split(".").pop()
-    if (
-      !ext ||
-      (ext !== "png" && ext !== "jpg" && ext !== "jpeg" && ext !== "webp")
-    ) {
-      return toast.error("画像ファイルを選択してください")
+    const avaivableTypes = ["image/png", "image/jpeg", "image/webp"]
+    if (!avaivableTypes.includes(file.type)) {
+      toast.error("対応していない画像形式です")
+      return
     }
 
     try {
-      // 選択画像を縦横比を保ちつつ横幅256pxにリサイズし、URLに変換
       const canvas = document.createElement("canvas")
       const ctx = canvas.getContext("2d")
       if (!ctx) return
