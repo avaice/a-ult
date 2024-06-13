@@ -32,7 +32,9 @@ export function App() {
             },
           })
         } catch (e) {
-          toast.error("説明の生成に失敗しました")
+          toast.error(
+            "情報が不足しているため、説明の生成に失敗しました。追加の情報を教えてください。"
+          )
           console.error(e)
         }
       } catch (e) {
